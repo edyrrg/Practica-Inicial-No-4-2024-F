@@ -174,3 +174,8 @@ sketch
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/yarn,node,dotenv,react
+
+# ryuk ignore
+init.sql
+
+conect_private.txt
