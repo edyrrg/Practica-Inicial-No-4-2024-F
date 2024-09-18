@@ -1,11 +1,19 @@
 const express = require('express');
+const bodyParser = require("body-parser")
+const cors = require("cors")
+const dontenv = require('dotenv')
+const userRoutes = require('./routes/userRoutes');
+const db = require('./config/db');
+
 const app = express();
-const port = 3000;
+dontenv.config()
 
-app.get('/', (_req, res) => {
-  res.send('Hello World, is good to see u <3!');
-})
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
+app.use('/api', userRoutes);
 
-app.listen(port, () => {
-  console.log(`Server run on http://localhost:${port}`);
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
