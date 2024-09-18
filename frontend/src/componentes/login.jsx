@@ -59,32 +59,65 @@ const Login = () => {
     return (
 
         <div className='d-flex align-items-center justify-content-center' style={{ minHeight: '100vh' }}>
-            <div className="form-signin bg-body-tertiary " style={{ width: '100%', maxWidth: '400px', borderRadius: "20px" }}>
-
+        <div className="form-signin bg-body-tertiary" style={{ width: '100%', maxWidth: '400px', borderRadius: "20px", padding: '30px' }}>
+    
             <form onSubmit={handleSubmit}>
-                <img classNameName="mb-4" src="https://seeklogo.com/images/U/usac-logo-87DDCE2742-seeklogo.com.png?v=638231122380000000" alt="" width="72" height="72" style={{ borderRadius: '70px', marginBottom: '20px' }}/>
-                <h1 className="h3 mb-3 fw-normal">Incio de Sesion</h1>
-
-                <div className="form-floating">
-                    <input required type="text" className="form-control" id="floatingInput" placeholder="name@example.com" value={carnet} onChange={(e) => setCarnet(e.target.value) } />
+                <img 
+                    className="mb-4" 
+                    src="https://seeklogo.com/images/U/usac-logo-87DDCE2742-seeklogo.com.png?v=638231122380000000" 
+                    alt="" 
+                    width="72" 
+                    height="72" 
+                    style={{ borderRadius: '70px', marginBottom: '30px' }}
+                />
+                <h1 className="h3 mb-3 fw-normal" style={{ marginBottom: '30px' }}>Incio de Sesion</h1>
+    
+                <div className="form-floating" style={{ marginBottom: '20px' }}>
+                    <input 
+                        required 
+                        type="text" 
+                        className="form-control" 
+                        id="floatingInput" 
+                        placeholder="name@example.com" 
+                        value={carnet} 
+                        onChange={(e) => setCarnet(e.target.value)} 
+                    />
                     <label htmlFor="floatingInput" style={{ color: 'gray' }}>CUI/Registro académico</label>
                 </div>
-                <div className="form-floating">
-                    <input required type="password" className="form-control" id="floatingPassword" placeholder="Password" value={pass} onChange={(e) => setPass(e.target.value) }/>
-                    <label for="floatingPassword" style={{ color: 'gray' }}>Contraseña</label>
+    
+                <div className="form-floating" style={{ marginBottom: '30px' }}> 
+                    <input 
+                        required 
+                        type="password" 
+                        className="form-control" 
+                        id="floatingPassword" 
+                        placeholder="Password" 
+                        value={pass} 
+                        onChange={(e) => setPass(e.target.value)} 
+                    />
+                    <label htmlFor="floatingPassword" style={{ color: 'gray' }}>Contraseña</label>
                 </div>
-                <button className="btn btn-primary w-100 py-2" type="submit">Iniciar sesion</button>                
+    
+                <button 
+                    className="btn btn-primary w-100 py-2" 
+                    type="submit" 
+                    style={{ marginBottom: '20px' }} 
+                >
+                    Iniciar sesión
+                </button>                
             </form>
-
+    
+            <p className="mt-3 mb-0 text-center" style={{ marginBottom: '20px' }}> 
+                ¿Aun no tienes una cuenta? 
+                <button className="btn btn-secondary btn-sm" onClick={() => navigate('/registro')}>Regístrate aquí</button>.
+            </p>
+    
             <p className="mt-3 mb-0 text-center">
-                    ¿Aun no tienes una cuenta? <button className="btn btn-secondary  btn-sm" onClick={() => navigate('/registro')}>Registrate aquí</button>.
-                </p>
-                <p className="mt-3 mb-0 text-center">
-  olvidaste tu contraseña 
-  <a href="#" onClick={() => navigate('/registro')}>Contraseña</a>.
-</p>
-            </div>
+                ¿Olvidaste tu contraseña? 
+                <a href="#" onClick={() => navigate('/registro')}>Recuperar contraseña</a>.
+            </p>
         </div>
+    </div>
 
 
     );

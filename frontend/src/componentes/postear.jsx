@@ -68,7 +68,7 @@ const Postear = () => {
                 style={{ border: '2px solid #00bfff', borderRadius: '5px' }}
                 required
               >
-                <option value="">Selecciona una categoría</option>
+                <option value="">Selecciona un curso</option>
                 <option value="Compiladores">Compiladores</option>
                 <option value="Logica">Logica</option>
                 <option value="Ingles">Ingles</option>
@@ -85,7 +85,7 @@ const Postear = () => {
                 style={{ border: '2px solid #00bfff', borderRadius: '5px' }}
                 required
               >
-                <option value="">Selecciona una categoría</option>
+                <option value="">Selecciona un catedratico</option>
                 <option value="Jorge Ramirez">Jorge Ramirez</option>
                 <option value="Claudia Contreras">Claudia Contrerass</option>
                 <option value="Mateo Hernan">Mateo Hernan</option>
