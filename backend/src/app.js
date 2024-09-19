@@ -10,9 +10,9 @@ const cursoRoutes = require('./routes/cursoRoutes');
 const app = express();
 dontenv.config()
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
 app.use('/api', userRoutes);
 app.use('/api', publicationRoutes);
 app.use('/api', catedraticoRoutes);

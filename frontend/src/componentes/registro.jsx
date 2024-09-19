@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Registro = () => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
+  const [carnetID, setCarnetID] = useState('');  // Agregar campo carnetID
+  const [nombres, setNombres] = useState('');
+  const [apellidos, setApellidos] = useState('');
   const [correo, setCorreo] = useState('');
-  const [password, setPass] = useState('');
+  const [pass, setPass] = useState('');
 
   const navigate = useNavigate();
 
@@ -13,25 +14,31 @@ const Registro = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/Registro', {
+      const response = await fetch('http://localhost:3060/api/usuarios', {  // URL corregida
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          nombre,
-          apellido,
-          correo,
-          password,
+          carnetID: carnetID,            // Enviar carnetID
+          nombres: nombres,              // Enviar nombres
+          apellidos: apellidos,          // Enviar apellidos
+          correo: correo,                // Enviar correo
+          pass: pass                     // Enviar contraseña como 'pass'
         }),
       });
 
       const data = await response.json();
 
-      console.log(data);
-      alert(data.mensaje);
+      if (response.ok) {
+        alert('Registro exitoso');
+        navigate('/Login');  // Redirige al usuario al iniciar sesión tras registrarse
+      } else {
+        alert('Error: ' + data.mensaje);
+      }
     } catch (error) {
       console.error('Error en la solicitud', error);
+      alert('Hubo un error al registrar. Intenta de nuevo.');
     }
   };
 
@@ -53,17 +60,18 @@ const Registro = () => {
           </div>
           <h1 className='h3 mb-3 fw-normal text-center'>Registro</h1>
 
+          {/* Campo para ingresar el carnet */}
           <div className='form-floating' style={{ marginBottom: '15px' }}>
             <input
               required
               type='text'
               className='form-control'
-              id='floatingNombre'
-              placeholder='Nombre'
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              id='floatingCarnet'
+              placeholder='Carnet'
+              value={carnetID}
+              onChange={(e) => setCarnetID(e.target.value)}
             />
-            <label htmlFor='floatingNombre'>Nombre</label>
+            <label htmlFor='floatingCarnet'>Número de Carnet</label>
           </div>
 
           <div className='form-floating' style={{ marginBottom: '15px' }}>
@@ -71,12 +79,25 @@ const Registro = () => {
               required
               type='text'
               className='form-control'
-              id='floatingApellido'
-              placeholder='Apellido'
-              value={apellido}
-              onChange={(e) => setApellido(e.target.value)}
+              id='floatingNombres'
+              placeholder='Nombre'
+              value={nombres}
+              onChange={(e) => setNombres(e.target.value)}
             />
-            <label htmlFor='floatingApellido'>Apellido</label>
+            <label htmlFor='floatingNombres'>Nombre</label>
+          </div>
+
+          <div className='form-floating' style={{ marginBottom: '15px' }}>
+            <input
+              required
+              type='text'
+              className='form-control'
+              id='floatingApellidos'
+              placeholder='Apellido'
+              value={apellidos}
+              onChange={(e) => setApellidos(e.target.value)}
+            />
+            <label htmlFor='floatingApellidos'>Apellido</label>
           </div>
 
           <div className='form-floating' style={{ marginBottom: '15px' }}>
@@ -99,7 +120,7 @@ const Registro = () => {
               className='form-control'
               id='floatingPassword'
               placeholder='Contraseña'
-              value={password}
+              value={pass}
               onChange={(e) => setPass(e.target.value)}
             />
             <label htmlFor='floatingPassword'>Contraseña</label>
