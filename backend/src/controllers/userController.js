@@ -1,8 +1,6 @@
-// controllers/userController.js
-const { parse } = require('dotenv');
 const User = require('../models/User');
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = async (_req, res) => {
     try {
         const users = await User.getAll();
         res.status(200).json(users);
@@ -31,12 +29,12 @@ exports.getUserById = async (req, res) => {
 
 exports.findUserByCarnet = async (req, res) => {
     try {
-        const { carnet } = req.query;
-        console.log(carnet);
-        if (!carnet) {
+        const { carnet_id } = req.body;
+        console.log(carnet_id);
+        if (!carnet_id) {
             return res.status(400).json({ error: 'Missing carnet_id' });
         }
-        const parsedCarnetId = parseInt(carnet);
+        const parsedCarnetId = parseInt(carnet_id);
         const user = await User.findByCarnet(parsedCarnetId);
         if (user) {
             res.status(200).json(user);
@@ -91,13 +89,14 @@ exports.deleteUser = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        if (!req.body.correo || !req.body.pass) {
+        const { carnet_id, pass } = req.body;
+        if (!carnet_id || !pass) {
             return res.status(400).json({ error: 'Missing email or password' });
         }
-
-        const user = await User.getCredentialsByEmail(req.body.correo);
-        if (user && user.contraseña === req.body.pass) {
-            res.status(200).json({ message: 'Login successful' });
+        const parsed_carnet_id = parseInt(carnet_id);
+        const user = await User.findByCarnet(parsed_carnet_id);
+        if (user && user.contraseña === pass) {
+            res.status(200).json(user);
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -108,15 +107,16 @@ exports.login = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     try {
-        if (!req.body.carnet_id || !req.body.new_pass) {
+        const { carnet_id, correo, new_pass } = req.body;
+        if (!carnet_id || !correo || !new_pass) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        const carnet_id = parseInt(req.body.carnet_id);
-        const msg = await User.resetPassword(carnet_id, req.body.new_pass);
+        const parsed_carnet_id = parseInt(carnet_id);
+        const msg = await User.resetPassword(parsed_carnet_id, correo, new_pass);
         
         res.status(200).json({ ...msg });
     } catch (error) {
-        if (error.message === 'User not found or pass no changes made') {
+        if (error.message === 'User not found and password not updated') {
             return res.status(404).json({ error: error.message });
         }
         res.status(500).json({ error: 'Error reset password' });

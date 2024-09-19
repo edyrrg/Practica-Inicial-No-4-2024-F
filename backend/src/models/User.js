@@ -70,11 +70,15 @@ class User {
         await db.query('DELETE FROM usuarios WHERE nu_carnet = ?', [carnet_id])
     }
 
-    static async resetPassword(carnet_id, new_pass) {
-        const [result] = await db.query('UPDATE usuarios SET contraseña = ? WHERE nu_carnet = ?',
-            [new_pass, carnet_id]);
+    static async resetPassword(carnet_id, correo, new_pass) {
+        const query = `
+        UPDATE usuarios 
+        SET contraseña = ? 
+        WHERE nu_carnet = ? AND correo_electronico = ?
+        `;
+        const [result] = await db.query(query, [new_pass, carnet_id, correo]);
         if (result.affectedRows === 0) {
-            throw new Error('User not found or pass no changes made');
+            throw new Error('User not found and password not updated');
         }
 
         return { message: 'Password updated successfully' };
