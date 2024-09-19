@@ -20,8 +20,18 @@ class User {
         return rows[0];
     }
 
+    static async findByCarnet(carnet_id) {
+        const [rows] = await db.query('SELECT * FROM usuarios WHERE nu_carnet = ?', [carnet_id]);
+        return rows[0];
+    }
+
     static async getByEmail(correo) {
         const [rows] = await db.query('SELECT * FROM usuarios WHERE correo_electronico = ?', [correo]);
+        return rows[0];
+    }
+
+    static async getCredentialsByEmail(correo) {
+        const [rows] = await db.query('SELECT correo_electronico, contraseña FROM usuarios WHERE correo_electronico = ?', [correo]);
         return rows[0];
     }
 
@@ -39,11 +49,17 @@ class User {
     }
 
     static async update(id, userData) {
-        const { carnet_id, nombres, apellidos, correo_electronico} = userData;
-        await db.query(
+        const { carnetID, nombres, apellidos, correo: correo_electronico } = userData;
+        const [result] = await db.query(
             'UPDATE usuarios SET nu_carnet = ?, nombres = ?, apellidos = ?, correo_electronico = ? WHERE id = ?',
-            [carnet_id, nombres, apellidos, correo_electronico, id]
+            [carnetID, nombres, apellidos, correo_electronico, id]
         );
+
+        if (result.affectedRows === 0) {
+            throw new Error('User not found or no changes made');
+        }
+
+        return { message: 'User updated successfully' };
     }
 
     static async delete(id) {
@@ -52,6 +68,20 @@ class User {
 
     static async delete_by_carnet_id(carnet_id) {
         await db.query('DELETE FROM usuarios WHERE nu_carnet = ?', [carnet_id])
+    }
+
+    static async resetPassword(carnet_id, correo, new_pass) {
+        const query = `
+        UPDATE usuarios 
+        SET contraseña = ? 
+        WHERE nu_carnet = ? AND correo_electronico = ?
+        `;
+        const [result] = await db.query(query, [new_pass, carnet_id, correo]);
+        if (result.affectedRows === 0) {
+            throw new Error('User not found and password not updated');
+        }
+
+        return { message: 'Password updated successfully' };
     }
 }
 
