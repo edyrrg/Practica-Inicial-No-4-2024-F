@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Pass = () => {
   const [carnet, setCarnet] = useState('');
@@ -7,25 +8,23 @@ const Pass = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isVerified, setIsVerified] = useState(false);
   const [mensaje, setMensaje] = useState('');
+  const navigate = useNavigate();
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/verify-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          carnet,
-          correo,
-        }),
-      });
+      // Realiza una petición GET a la API para obtener los usuarios
+      const response = await fetch('http://localhost:3060/api/usuarios');
+      const usuarios = await response.json();
 
-      const data = await response.json();
+      // Busca si el usuario con el carnet y correo proporcionado existe en la base de datos
+      const usuarioValido = usuarios.find(
+        user => user.nu_carnet === parseInt(carnet.trim()) && user.correo_electronico === correo.trim()
+      );
 
-      if (data.success) {
+      if (usuarioValido) {
         setIsVerified(true);
         setMensaje('Datos verificados. Ahora puede ingresar una nueva contraseña.');
       } else {
@@ -46,22 +45,24 @@ const Pass = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/reset-password', {
-        method: 'POST',
+      // Realiza un PATCH a la API para actualizar la contraseña
+      const response = await fetch('http://localhost:3060/api/reset_password', {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          carnet,
-          correo,
-          password,
+          "carnet_id": carnet,
+          "correo": correo,
+          "new_pass": password
         }),
+        redirect : "follow"
       });
 
-      const data = await response.json();
-
-      if (data.success) {
+  
+      if (response.status==200) {
         setMensaje('Contraseña actualizada correctamente.');
+        navigate('/login'); // Redirigir a /admin
       } else {
         setMensaje('Error al actualizar la contraseña.');
       }
@@ -106,10 +107,6 @@ const Pass = () => {
               />
               <label htmlFor='floatingCorreo'>Correo Electrónico</label>
             </div>
-
-            
-
-            
 
             <button className='btn btn-primary w-100 py-2' type='submit'>
               Verificar datos
