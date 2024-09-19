@@ -13,13 +13,9 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault(); 
 
-        if (carnet === '12024' && pass === 'ipc1') {
-            alert('Bienvenido Administrador');
-            navigate('/admin'); // Redirigir a /admin
-            return; // Termina aquí si es administrador
-          }
+        
       
-          // Si no es administrador, intentar iniciar sesión con el servidor
+         
           try {
             const response = await fetch('http://localhost:5000/Login', {
                 method: 'POST',
@@ -114,7 +110,7 @@ const Login = () => {
     
             <p className="mt-3 mb-0 text-center">
                 ¿Olvidaste tu contraseña? 
-                <a href="#" onClick={() => navigate('/registro')}>Recuperar contraseña</a>.
+                <a href="#" onClick={() => navigate('/pass')}>Recuperar contraseña</a>.
             </p>
         </div>
     </div>
